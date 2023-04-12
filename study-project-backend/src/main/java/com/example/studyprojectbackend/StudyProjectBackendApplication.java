@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class StudyProjectBackendApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(StudyProjectBackendApplication.class, args);
+         SpringApplication.run(StudyProjectBackendApplication.class, args);
     }
 
 }
