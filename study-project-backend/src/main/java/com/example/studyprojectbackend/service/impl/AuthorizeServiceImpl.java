@@ -1,6 +1,6 @@
 package com.example.studyprojectbackend.service.impl;
 
-import com.example.studyprojectbackend.entity.Account;
+import com.example.studyprojectbackend.entity.auth.Account;
 import com.example.studyprojectbackend.mapper.UserMapper;
 import com.example.studyprojectbackend.service.AuthorizeService;
 import jakarta.annotation.Resource;
@@ -11,12 +11,10 @@ import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -56,15 +54,18 @@ public class AuthorizeServiceImpl implements AuthorizeService {
      * 5. 用户在注册时，再从Redis里面取出键值对，然后看验证码是否一致
      */
     @Override
-    public String sendValidateEmail(String email, String sessionId) {
-        String key = "email:" + sessionId + ":" + email;
+    public String sendValidateEmail(String email, String sessionId, boolean hasAccount) {
+        String key = "email:" + sessionId + ":" + email + ":" + hasAccount;
         if (Boolean.TRUE.equals(template.hasKey(key))) {
             Long expire = Optional.ofNullable(template.getExpire(key, TimeUnit.SECONDS)).orElse(0L);
             if (expire > 120)
                 return "请求频繁，请稍后再试！";
         }
-        if (userMapper.findAccountByNameOrEmail(email) != null)
-            return "此邮箱已被其他用户注册";
+        Account account = userMapper.findAccountByNameOrEmail(email);
+        if (hasAccount && account == null)
+            return "没有此邮件的用户";
+        if (!hasAccount && account != null)
+            return "此邮件已被其他用户注册";
         Random random = new Random();
         int code = random.nextInt(899999) + 100000;
         SimpleMailMessage message = new SimpleMailMessage();
@@ -84,11 +85,15 @@ public class AuthorizeServiceImpl implements AuthorizeService {
 
     @Override
     public String validateAndRegister(String username, String password, String email, String code, String sessionId) {
-        String key = "email:" + sessionId + ":" + email;
+        String key = "email:" + sessionId + ":" + email + ":false";
         if (Boolean.TRUE.equals(template.hasKey(key))) {
             String s = template.opsForValue().get(key);
             if (s == null) return "验证码失效，请重新请求";
             if (s.equals(code)) {
+                Account account = userMapper.findAccountByNameOrEmail(username);
+                if (account != null)
+                    return "此用户名已被注册，请更换用户名";
+                template.delete(key);
                 password = encoder.encode(password);
                 if (userMapper.createAccount(username, password, email) > 0) {
                     return null;
@@ -101,5 +106,27 @@ public class AuthorizeServiceImpl implements AuthorizeService {
         } else {
             return "请先请求一封验证码邮件";
         }
+    }
+
+    @Override
+    public String validateOnly(String email, String code, String sessionId) {
+        String key = "email:" + sessionId + ":" + email + ":true";
+        if (Boolean.TRUE.equals(template.hasKey(key))) {
+            String s = template.opsForValue().get(key);
+            if (s == null) return "验证码失效，请重新请求";
+            if (s.equals(code)) {
+                return null;
+            } else {
+                return "验证码错误，请检查后再提交";
+            }
+        } else {
+            return "请先请求一封验证码邮件";
+        }
+    }
+
+    @Override
+    public boolean resetPassword(String password, String email) {
+        password = encoder.encode(password);
+        return userMapper.resetPasswordByEmail(password, email) > 0;
     }
 }

@@ -1,7 +1,7 @@
 <template>
   <div style="text-align: center; margin: 20px">
-    <div style="text-align: center;margin-top: 150px">
-      <div style="font-size: 25px">登录</div>
+    <div style="text-align: center;margin-top: 20%">
+      <div style="font-size: 25px; font-weight: bold">注册账户</div>
     </div>
     <div style="margin-top: 50px">
       <el-form :model="form" :rules="rules" @validate="onValidate" ref="formRef">
@@ -41,7 +41,7 @@
               </el-input>
             </el-col>
             <el-col :span="5">
-              <el-button type="success" :disabled="!isEmailValid || coldTime > 0" @click="validateEmail">\
+              <el-button type="success"  @click="validateEmail" :disabled="!isEmailValid || coldTime > 0">
                 {{coldTime > 0 ? '请稍后' + coldTime + '秒' : '获取验证码'}}
               </el-button>
             </el-col>
@@ -49,13 +49,12 @@
         </el-form-item>
       </el-form>
     </div>
-
     <div style="margin-top: 80px">
       <el-button style="width: 270px" type="warning" plain @click="register">立即注册</el-button>
     </div>
     <div style="margin-top: 20px">
       <span style="font-size: 14px; color: gray">已有帐号？</span>
-      <el-link type="primary" style="translate: 0 -2px" @click="router.push('/')">立即登录</el-link>
+      <el-link type="primary" style="translate: 0 -2px" @click="router.push('/welcome')">立即登录</el-link>
     </div>
   </div>
 
@@ -140,12 +139,15 @@ const register = () => {
   })
 }
 const validateEmail = () => {
+  coldTime.value = 60
   post('/api/auth/valid-email', {
     email: form.email
   }, (message) => {
     ElMessage.success(message)
-    coldTime.value = 60
     setInterval(() => coldTime.value--, 1000)
+  }, (message) => {
+    ElMessage.warning(message)
+    coldTime.value = 0
   })
 }
 

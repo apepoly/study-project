@@ -94,15 +94,14 @@ public class SecurityConfiguration {
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         response.setCharacterEncoding("utf-8");
         if (request.getRequestURI().endsWith("/login"))
-            response.getWriter().write(JSONObject.toJSONString(RestBean.success("登陆成功")));
+            response.getWriter().write(JSONObject.toJSONString(RestBean.success("登录成功!")));
         else if (request.getRequestURI().endsWith("/logout"))
-            response.getWriter().write(JSONObject.toJSONString(RestBean.success("退出成功")));
-
+            response.getWriter().write(JSONObject.toJSONString(RestBean.success("退出成功!")));
     }
-    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
+    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException {
         response.setCharacterEncoding("utf-8");
         response.getWriter().write(JSONObject.toJSONString(RestBean.failure(401, exception.getMessage())));
     }
