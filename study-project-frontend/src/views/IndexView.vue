@@ -14,17 +14,26 @@
           <img src="src/img/logo.png" width="60" height="60" alt=""/>
           <el-menu-item index="/index" >首页</el-menu-item>
           <el-menu-item index="/introduction">大熊猫公园介绍</el-menu-item>
-          <el-menu-item index="3">大熊猫知识科普</el-menu-item>
-          <el-menu-item index="4">新闻资讯</el-menu-item>
-          <el-menu-item index="5">旅行专题</el-menu-item>
+          <el-menu-item index="/knowledge">大熊猫知识科普</el-menu-item>
+          <el-menu-item index="/News">新闻资讯</el-menu-item>
+          <el-menu-item index="/Travel">旅行专题</el-menu-item>
           <div class="flex-grow" />
-          <el-menu-item index="/welcome" style="color: black">登录</el-menu-item>
+          <el-menu-item><router-link to="welcome" style="color: white" v-if="store.auth.user != null">{{store.auth.user.username}}</router-link></el-menu-item>
+          <el-menu-item index="/welcome" style="color: black" v-if="store.auth.user == null">登录</el-menu-item>
+          <el-menu-item @click="logout" style="color: black" v-else>退出</el-menu-item>
         </el-menu>
       </el-header>
-      <el-main>
+      <div style="padding: 0;">
+        <el-carousel trigger="click" height="600px">
+          <el-carousel-item v-for="item in imgList" :key="item">
+            <el-image style="width: 100%; height: 100%;" :src=getImageUrl(item.url) alt="无图片" fit="cover"/>
+          </el-carousel-item>
+        </el-carousel>
+      </div>
+      <el-main >
         <router-view></router-view>
       </el-main>
-      <el-footer><button @click="logout">退出</button></el-footer>
+
     </el-container>
   </div>
 </template>
@@ -38,6 +47,14 @@ import {ref} from "vue";
 const handleSelect = (key, keyPath) => {
   console.log(key, keyPath)
 }
+
+const imgList = [
+  {url: "panda1"},
+  {url: "index_panda"}
+]
+function getImageUrl(name) {
+  return new URL(`/src/img/${name}.jpg`, import.meta.url).href
+}
 const store = useStore()
 const logout = () => {
   get("/api/auth/logout", (message) => {
@@ -46,6 +63,7 @@ const logout = () => {
     router.push('/')
   })
 }
+
 </script>
 
 <style scoped>

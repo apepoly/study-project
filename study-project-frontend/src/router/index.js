@@ -18,6 +18,21 @@ const router = createRouter({
           path: '/introduction',
           name: 'introduction',
           component: () => import('@/components/main/IntroductionOfPandaParkPage.vue')
+        },
+        {
+          path: '/knowledge',
+          name: 'knowledge',
+          component: () => import('@/components/main/Knowledge.vue')
+        },
+        {
+          path: '/news',
+          name: 'news',
+          component: () => import('@/components/main/News.vue')
+        },
+        {
+          path: '/travel',
+          name: 'travel',
+          component: () => import('@/components/main/Travel.vue')
         }
       ]
     },
