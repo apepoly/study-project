@@ -19,6 +19,7 @@
           <el-menu-item index="/Travel">旅行专题</el-menu-item>
           <div class="flex-grow" />
           <el-menu-item><router-link to="welcome" style="color: white" v-if="store.auth.user != null">{{store.auth.user.username}}</router-link></el-menu-item>
+          <el-menu-item><router-link to="manage">进入管理</router-link></el-menu-item>
           <el-menu-item index="/welcome" style="color: black" v-if="store.auth.user == null">登录</el-menu-item>
           <el-menu-item @click="logout" style="color: black" v-else>退出</el-menu-item>
         </el-menu>

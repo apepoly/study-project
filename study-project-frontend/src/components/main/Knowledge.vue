@@ -1,69 +1,58 @@
 <template>
-  <div>
-    <h2 style="text-align: center">大熊猫知识科普</h2>
-    <el-divider />
-    <el-row :align="'middle'" class="row-box">
-      <el-col :span="6"></el-col>
-      <el-col :span="12">
-        <el-space direction="vertical">
-          <!--          ==========================================================-->
-
-          <el-card class="el-card" shadow="hover">
-            <template #header>
-              <div class="card-header">
-                <el-link class="title">【熊猫知识】大熊猫生长发育</el-link>
-                <div>2016-08-04</div>
-              </div>
-            </template>
-            <p>刚出生：初生熊猫幼仔体重仅是它母亲体重的千分之一，平均体重仅120克左右，最轻的为51克，最重的为225克。粉色的皮肤上长着白毛，眼睛和耳朵还没有发育完全，免疫系统的也还未发育完</p>
-          </el-card>
-
-          <!-- ==========================================================-->
-          <el-card class="el-card" shadow="hover">
-            <template #header>
-              <div class="card-header">
-                <el-link class="title">【熊猫知识】大熊猫生长发育</el-link>
-                <div>2016-08-04</div>
-              </div>
-            </template>
-            <p>刚出生：初生熊猫幼仔体重仅是它母亲体重的千分之一，平均体重仅120克左右，最轻的为51克，最重的为225克。粉色的皮肤上长着白毛，眼睛和耳朵还没有发育完全，免疫系统的也还未发育完</p>
-          </el-card>
-
-          <el-card class="el-card" shadow="hover">
-            <template #header>
-              <div class="card-header">
-                <el-link class="title">【熊猫知识】伴生动物</el-link>
-                <div>2016-08-04</div>
-              </div>
-            </template>
-            <p>大熊猫的伴生动物有金丝猴，小熊猫，林麝、羚牛、血雉，红腹锦鸡等。这些珍贵动物基本上都与熊猫生活在同一环境中。从自然历史源源上来看，她们都是一百万到几百万年以前的古</p>
-          </el-card>
-          <el-card class="el-card" shadow="hover">
+  <h2 style="text-align: center">大熊猫知识科普</h2>
+  <el-divider />
+  <el-row :align="'middle'" class="row-box">
+    <el-col :span="6"></el-col>
+    <el-col :span="12">
+    <router-link v-for="item in items" :key="item.id" :to="{path: '/KnowledgeDetail', query: {id: item.id}}" :underline="false" style="text-decoration: none" target="_blank">
+        <el-card  class="el-card" shadow="hover">
           <template #header>
             <div class="card-header">
-              <el-link class="title">【熊猫知识】认识大熊猫</el-link>
-              <div>2016-08-05</div>
+              <el-text class="title">{{item.title}}</el-text>
+              <div>{{item.date}}</div>
             </div>
           </template>
-          <p>大熊猫是世界上最可爱的动物之一，它有着圆圆的脸颊，大大的黑眼圈，胖嘟嘟的身体，标志性的内八字的行走方式，也有解剖刀般锋利的爪子。</p>
-        </el-card><el-card class="el-card" shadow="hover">
-          <template #header>
-            <div class="card-header">
-              <el-link class="title">【熊猫知识】大熊猫历史</el-link>
-              <div>2016-08-05</div>
-            </div>
-          </template>
-          <p>大熊猫是世界上最可爱的动物之一，它有着圆圆的脸颊，大大的黑眼圈，胖嘟嘟的身体，标志性的内八字的行走方式，也有解剖刀般锋利的爪子。</p>
+          <p>{{item.content}}</p>
         </el-card>
-        </el-space>
-      </el-col>
-      <el-col :span="6"></el-col>
-    </el-row>
-  </div>
+    </router-link>
+    </el-col>
+    <el-col :span="6"></el-col>
+  </el-row>
 </template>
 
-<script>
+<script setup>
+  import {get} from "@/net";
+  import {onMounted, ref} from "vue";
 
+  function getImageUrl(name) {
+    return new URL(`/src/img/${name}.jpg`, import.meta.url).href
+  }
+  const items = ref()
+  const items_= [
+    {id:1, title:"【熊猫知识】大熊猫生长发育", date: "2023-1-2", content: "刚出生：初生熊猫幼仔体重仅是它母亲体重的千分之一，平均体重仅120克左右，最轻的为51克，最重的为225克。粉色的皮肤上长着白毛，眼睛和耳朵还没有发育完全，免疫系统的也还未发育完", url:"panda1", author: "大熊猫研究中心"},
+    {id:2, title:"【熊猫知识】大熊猫历史", date: "2023-1-2", content: "刚出生：初生熊猫幼仔体重仅是它母亲体重的千分之一，平均体重仅120克左右，最轻的为51克，最重的为225克。粉色的皮肤上长着白毛，眼睛和耳朵还没有发育完全，免疫系统的也还未发育完", url:"index_panda", author: "大熊猫研究中心"},
+    {id:3, title:"【熊猫知识】大熊猫生长发育", date: "2023-1-2", content: "刚出生：初生熊猫幼仔体重仅是它母亲体重的千分之一，平均体重仅120克左右，最轻的为51克，最重的为225克。粉色的皮肤上长着白毛，眼睛和耳朵还没有发育完全，免疫系统的也还未发育完", url:"panda1", author: "大熊猫研究中心"},
+    {id:1, title:"【熊猫知识】大熊猫生长发育", date: "2023-1-2", content: "刚出生：初生熊猫幼仔体重仅是它母亲体重的千分之一，平均体重仅120克左右，最轻的为51克，最重的为225克。粉色的皮肤上长着白毛，眼睛和耳朵还没有发育完全，免疫系统的也还未发育完", url:"panda1", author: "大熊猫研究中心"},
+    {id:2, title:"【熊猫知识】大熊猫历史", date: "2023-1-2", content: "刚出生：初生熊猫幼仔体重仅是它母亲体重的千分之一，平均体重仅120克左右，最轻的为51克，最重的为225克。粉色的皮肤上长着白毛，眼睛和耳朵还没有发育完全，免疫系统的也还未发育完", url:"index_panda", author: "大熊猫研究中心"},
+    {id:3, title:"【熊猫知识】大熊猫生长发育", date: "2023-1-2", content: "刚出生：初生熊猫幼仔体重仅是它母亲体重的千分之一，平均体重仅120克左右，最轻的为51克，最重的为225克。粉色的皮肤上长着白毛，眼睛和耳朵还没有发育完全，免疫系统的也还未发育完", url:"panda1", author: "大熊猫研究中心"}
+  ]
+  const getItems = () => {
+    get('', (data) => {
+      items.value = data
+    }, () => {
+
+    })
+  }
+  const toDetail = () => {
+
+  }
+  const test = () => {
+    items.value = items_
+  }
+  onMounted(() => {
+    console.log('111')
+    test()
+  })
 </script>
 
 <style scoped>
@@ -71,8 +60,7 @@
 .row-box .el-card {
   min-width: 100%;
   height: 100%;
-
-  border: 0;
+  margin: 10px;
 }
 .card-header {
   display: flex;

@@ -53,10 +53,54 @@ const router = createRouter({
           path: 'forget',
           name: 'welcome-forget',
           component: () => import('@/components/welcome/ForgetPage.vue')
+        },
+      ]
+    },
+    {
+      path: '/manage',
+      name: 'manage',
+      component: () => import('@/views/ManageView.vue'),
+      children: [
+        {
+          path: '/userList',
+          name: 'userList',
+          component: () => import('@/components/manage/UserList.vue')
+        }, {
+          path: '/userAuthApply',
+          name: 'userAuthApply',
+          component: () => import('@/components/manage/UserAuthApply.vue')
+        }, {
+          path: '/postList',
+          name: 'postList',
+          component: () => import('@/components/manage/postList.vue')
+        }, {
+          path: '/postApply',
+          name: 'postApply',
+          component: () => import('@/components/manage/postApply.vue')
+        }, {
+          path: '/newsApply',
+          name: 'newsApply',
+          component: () => import('@/components/manage/newsApply.vue')
+        }, {
+          path: '/newsList',
+          name: 'newsList',
+          component: () => import('@/components/manage/newsList.vue')
+        }, {
+          path: '/foundationList',
+          name: 'foundationList',
+          component: () => import('@/components/manage/foundationList.vue')
+        }, {
+          path: '/capitalFlow',
+          name: 'capitalFlow',
+          component: () => import('@/components/manage/CapitalFlow.vue')
         }
       ]
     },
-
+    {
+      path: '/KnowledgeDetail',
+      name: 'KnowledgeDetail',
+      component: () => import('@/views/KnowledgeView.vue')
+    }
   ]
 })
 
